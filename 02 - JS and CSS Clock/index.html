@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <style>
+    html {
+      background: #018DED url(http://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+    </div>
+  </div>
+
+  <script>
+    const hourHandEl = document.querySelector('.hour-hand')
+    const minHandEl = document.querySelector('.min-hand')
+    const secondHandEl = document.querySelector('.second-hand')
+
+    hourHandEl.style.transformOrigin = 'center right'
+    minHandEl.style.transformOrigin = 'center right'
+    secondHandEl.style.transformOrigin = 'center right'
+
+    const time = new Date()
+    const hours = time.getHours()
+    const minutes = time.getMinutes()
+    const seconds = time.getSeconds()
+    let totalTimeInSeconds = minutesToSeconds(hoursToMinutes(hours)) + minutesToSeconds(minutes) + seconds
+
+    updateClock()
+
+    setInterval(updateClock, 1000)
+
+    function updateClock () {
+      totalTimeInSeconds++
+      const hourHandDeg = (totalTimeInSeconds % 43200) / 43200 * 360 + 90
+      const minuteHandDeg = (totalTimeInSeconds % 3600) / 3600 * 360 + 90
+      const secondHandDeg = (totalTimeInSeconds % 60) / 60 * 360 + 90
+
+      hourHandEl.style.transform = `rotate(${hourHandDeg}deg)`
+      minHandEl.style.transform = `rotate(${minuteHandDeg}deg)`
+      secondHandEl.style.transform = `rotate(${secondHandDeg}deg)`
+    }
+
+    function hoursToMinutes (hours) {
+      return hours * 60
+    }
+
+    function minutesToSeconds (minutes) {
+      return minutes * 60
+    }
+
+  </script>
+</body>
+</html>
