@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+  <script>
+    const ENDPOINT = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    const searchEl = document.querySelector('.search')
+    const suggestionsEl = document.querySelector('.suggestions')
+    
+    const places = []
+
+    fetch(ENDPOINT)
+      .then(res => res.json())
+      .then(result => places.push(...result))
+
+      searchEl.addEventListener('input', handleOnInput)
+
+      function handleOnInput () {
+        const value = this.value
+
+        if (value.length === 0) {
+          suggestionsEl.textContent = ''
+          return
+        }
+
+        const regexp = new RegExp(value, 'gi')
+        const filteredPlaces = places.filter(filterStateAndCity)
+
+        suggestionsEl.innerHTML = filteredPlaces.map(listItemsMapper, '').join('')
+
+        function filterStateAndCity ({ city, state }) {
+          return city.match(regexp) || state.match(regexp)
+        }
+
+        function listItemsMapper ({ city, state, population }) {
+          const formattedString = parseInt(population).toLocaleString()
+          const cityHtml = city.replace(regexp, `<span class="hl">${value}</span>`)
+          const stateHtml = state.replace(regexp, `<span class="hl">${value}</span>`)
+
+          return `
+            <li>
+              <span>${cityHtml}, ${stateHtml}</span>
+              <span class="population">${formattedString}</span>
+            </li>
+          `
+        }
+      }
+  </script>
+</body>
+
+</html>
