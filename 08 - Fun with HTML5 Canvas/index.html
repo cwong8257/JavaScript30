@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+
+<body>
+  <canvas id="draw"></canvas>
+  <script>
+    const canvasEl = document.querySelector('#draw')
+    const ctx = canvasEl.getContext('2d')
+
+    canvasEl.width = window.innerWidth
+    canvasEl.height = window.innerHeight
+    ctx.stokeStyle = '#BADA55'
+    ctx.lineJoin = 'round'
+    ctx.lineCap = 'round'
+    ctx.lineWidth = 50
+
+    let isDrawing = false
+    let lastX
+    let lastY
+    let hue = 0
+    let shouldIncreaseLineWidth = true
+
+    canvasEl.addEventListener('mousemove', handleDraw)
+    canvasEl.addEventListener('mousedown', handleStartDraw)
+    canvasEl.addEventListener('mouseup', handleStopDraw)
+    canvasEl.addEventListener('mouseout', handleStopDraw)
+
+    function handleDraw(e) {
+      if (!isDrawing) return
+
+      ctx.beginPath()
+      ctx.moveTo(lastX, lastY)
+      ctx.lineTo(e.offsetX, e.offsetY)
+      ctx.stroke()
+
+      lastX = e.offsetX
+      lastY = e.offsetY
+      ctx.strokeStyle = `hsl(${hue++}, 100%, 50%)`
+
+      if (ctx.lineWidth === 80 || ctx.lineWidth === 10) {
+        shouldIncreaseLineWidth = !shouldIncreaseLineWidth
+      }
+
+      shouldIncreaseLineWidth ? ctx.lineWidth++ : ctx.lineWidth--
+    }
+
+    function handleStartDraw(e) {
+      isDrawing = true
+      lastX = e.offsetX
+      lastY = e.offsetY
+    }
+
+    function handleStopDraw() {
+      isDrawing = false
+    }
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
+
+</body>
+
+</html>
