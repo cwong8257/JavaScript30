@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+
+<body>
+  <script>
+    const KONAMI_SEQUENCE = 'qwerty'
+    let currentIndex = 0
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    function handleKeyDown(e) {
+      const konamiKey = KONAMI_SEQUENCE[currentIndex++]
+
+      if (e.key !== konamiKey) {
+        return currentIndex = 0
+      }
+
+      if (currentIndex === KONAMI_SEQUENCE.length) {
+        cornify_add()
+        document.removeEventListener('keydown', handleKeyDown)
+      }
+    }
+  </script>
+</body>
+
+</html>
