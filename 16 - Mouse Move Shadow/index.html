@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+  <style>
+    :root {
+      --text-shadow-offset-x: 0px;
+      --text-shadow-offset-y: 0px;
+      --text-shadow-blur: 0px;
+    }
+    html {
+      color: black;
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+    }
+
+    h1 {
+      text-shadow:
+        var(--text-shadow-offset-x)
+        var(--text-shadow-offset-y)
+        var(--text-shadow-blur)
+        rgba(0, 0, 0, 1);
+      font-size: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <h1 contenteditable>🔥WOAH!</h1>
+  </div>
+  <script>
+    const textEl = document.querySelector('.hero h1')
+    const rootElement = document.documentElement;
+    const rect = textEl.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+
+    document.addEventListener('mousemove', handleMouseMove)
+
+    function handleMouseMove(e) {
+      const offsetX = `${(centerX - e.clientX) / 50}px`
+      const offsetY = `${(centerY - e.clientY) / 50}px`
+      const blur = `${Math.max(Math.abs(parseInt(offsetX)), Math.abs(parseInt(offsetY)))}px`
+
+      rootElement.style.setProperty('--text-shadow-offset-x', offsetX)
+      rootElement.style.setProperty('--text-shadow-offset-y', offsetY)
+      rootElement.style.setProperty('--text-shadow-blur', blur)
+    }
+  </script>
+</body>
+
+</html>
