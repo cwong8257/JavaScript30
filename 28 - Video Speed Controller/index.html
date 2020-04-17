@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+  </div>
+
+<script>
+  const speedEl = document.querySelector('.speed')
+  const speedBarEl = document.querySelector('.speed-bar')
+  const videoEl = document.querySelector('video')
+  let isMousedown = false
+  const MAX_PLAYBACK_RATE = 4
+  const MIN_PLAYBACK_RATE = 0.25
+
+  speedEl.addEventListener('mousedown',handleMousedown)
+  speedEl.addEventListener('mouseup', handleMouseup)
+  speedEl.addEventListener('mouseleave', handleMouseleave)
+  speedEl.addEventListener('mousemove', handleMousemove)
+
+  function handleMousedown (e) {
+    e.preventDefault()
+
+    isMousedown = true
+    const percentage = e.offsetY / speedEl.offsetHeight
+
+    const height = `${percentage * 100}%`
+    speedBarEl.style.height = height
+  }
+
+  function handleMouseup () {
+    isMousedown = false
+  }
+
+  function handleMouseleave () {
+    isMousedown = false
+  }
+
+  function handleMousemove (e) {
+    if (!isMousedown) return
+    
+    const percentage = e.offsetY / speedEl.offsetHeight
+
+    // set height of playback speed bar
+    const height = `${percentage * 100}%`
+    speedBarEl.style.height = height
+
+    // set playback speed and text in playback speed bar
+    const playbackRate = percentage * (MAX_PLAYBACK_RATE - MIN_PLAYBACK_RATE) + MIN_PLAYBACK_RATE
+    speedBarEl.textContent = `${playbackRate.toFixed(2)}x`
+    videoEl.playbackRate = playbackRate
+  }
+</script>
+</body>
+</html>
